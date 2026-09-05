@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disk Scheduling Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="hero">
+    <h1>Disk Scheduling Visualizer</h1>
+    <p>SSTF • LOOK • C-LOOK</p>
+</header>
+
+<main class="container">
+    <section class="card config">
+        <h2>Disk Configuration</h2>
+        <div class="form-grid">
+            <label>
+                Initial Head Position
+                <input id="head" type="number" value="53" min="0">
+            </label>
+            <label>
+                Disk Size
+                <input id="diskSize" type="number" value="200" min="2">
+            </label>
+        </div>
+
+        <label>
+            Disk Requests
+            <input id="requests" type="text" value="98,183,37,122,14,65,67">
+            <small>Enter cylinder numbers separated by commas</small>
+        </label>
+
+        <label>
+            Initial Direction
+            <select id="direction">
+                <option value="right">Right →</option>
+                <option value="left">Left ←</option>
+            </select>
+        </label>
+
+        <button id="calculateBtn">Calculate &amp; Visualize</button>
+        <div id="error" class="error"></div>
+    </section>
+
+    <section id="results" class="hidden">
+        <section class="card">
+            <h2>Disk Head Movement</h2>
+            <p class="summary">
+                Initial Head: <strong id="initialHead"></strong>
+                <span>|</span>
+                Direction: <strong id="initialDirection"></strong>
+            </p>
+
+            <h3>Cylinder Timeline</h3>
+            <p class="muted">The cylinder axis always increases from left → right.</p>
+            <div id="mainTimeline" class="main-timeline"></div>
+        </section>
+
+        <section class="algorithm-grid">
+            <article class="card algorithm-card">
+                <h2>SSTF</h2>
+                <p class="muted">Shortest Seek Time First</p>
+                <div class="movement-number"><span id="sstfMovement">0</span> <small>cylinders</small></div>
+                <h3>Sequence</h3>
+                <div id="sstfSequence" class="sequence"></div>
+                <div class="graph-title">
+                    <h3>SSTF Graph</h3>
+                    <button class="small-btn" data-play="sstf">▶ Play</button>
+                </div>
+                <div id="sstfGraph" class="graph"></div>
+                <div id="sstfStep" class="step-indicator"></div>
+            </article>
+
+            <article class="card algorithm-card">
+                <h2>LOOK</h2>
+                <p class="muted">Directional Scheduling</p>
+                <div class="movement-number"><span id="lookMovement">0</span> <small>cylinders</small></div>
+                <h3>Sequence</h3>
+                <div id="lookSequence" class="sequence"></div>
+                <div class="graph-title">
+                    <h3>LOOK Graph</h3>
+                    <button class="small-btn" data-play="look">▶ Play</button>
+                </div>
+                <div id="lookGraph" class="graph"></div>
+                <div id="lookStep" class="step-indicator"></div>
+            </article>
+
+            <article class="card algorithm-card">
+                <h2>C-LOOK</h2>
+                <p class="muted">Circular LOOK — wrap is counted as movement</p>
+                <div class="movement-number"><span id="clookMovement">0</span> <small>cylinders</small></div>
+                <h3>Sequence</h3>
+                <div id="clookSequence" class="sequence"></div>
+                <div class="graph-title">
+                    <h3>C-LOOK Graph</h3>
+                    <button class="small-btn" data-play="clook">▶ Play</button>
+                </div>
+                <div id="clookGraph" class="graph"></div>
+                <div id="clookStep" class="step-indicator"></div>
+            </article>
+        </section>
+
+        <section class="card">
+            <div class="control-row">
+                <h2>Animated Visualization</h2>
+                <button id="playAllBtn" class="small-btn">▶ Play All</button>
+            </div>
+            <p class="muted">Each graph animates the disk head one request at a time. Use the individual Play buttons or Play All.</p>
+            <div class="legend">
+                <span><i class="dot request-dot"></i> Request</span>
+                <span><i class="dot head-dot"></i> Current head</span>
+                <span><i class="line solid"></i> Normal movement</span>
+                <span><i class="line dashed"></i> C-LOOK circular jump</span>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Algorithm Comparison</h2>
+            <div id="comparison"></div>
+            <div id="bestAlgorithm" class="best"></div>
+        </section>
+
+        <section class="card">
+            <h2>Detailed Step-by-Step Results</h2>
+            <div id="tables"></div>
+        </section>
+    </section>
+</main>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
